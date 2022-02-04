@@ -19,6 +19,7 @@ const smartcrop = require('smartcrop-sharp');
 const ytsr = require('ytsr');
 const ytpl = require('ytpl');
 const lcs = require('longest-common-substring');
+const { exit } = require('process');
 
 // API keys
 const API_ACOUSTID = 'lm59lNN597';
@@ -1311,7 +1312,7 @@ at3.searchOnYoutube = (query, regionCode, relevanceLanguage, v) => {
   };
 
   // We simply search on YouTube
-  return ytsr(query, { limit: 20 }).then(({ items }) => {
+  return ytsr(query, { limit: 1 }).then(({ items }) => {
     const videos = items.filter((item) => item.type === 'video');
 
     if (videos.length === 0) {
@@ -1320,7 +1321,9 @@ at3.searchOnYoutube = (query, regionCode, relevanceLanguage, v) => {
 
     return Promise.all(
       videos.map(async (video) => {
-        const infos = await ytdl.getInfo(video.link);
+        const infoApiData = await ytdl.getInfo(video.url);
+        const infos = infoApiData.videoDetails;
+        const formats = infoApiData.formats;
 
         let ratio = 1.0;
         if (infos.dislikes > 0) {
@@ -1332,10 +1335,10 @@ at3.searchOnYoutube = (query, regionCode, relevanceLanguage, v) => {
         const realLike = (infos.likes - infos.dislikes) * ratio;
 
         return {
-          id: infos.video_id,
-          url: video.link,
+          id: infos.videoId,
+          url: video.url,
           title: improveTitle(infos.title),
-          hd: infos.formats.some(
+          hd: formats.some(
             ({ qualityLabel }) => qualityLabel && (qualityLabel.startsWith('720p') || qualityLabel.startsWith('1080p')),
           ),
           duration: parseInt(infos.length_seconds, 10),
@@ -2141,7 +2144,8 @@ at3.downloadPlaylistWithTitles = (url, outputFolder, callback, maxSimultaneous, 
           at3.downloadAndTagSingleURL(videos[i].url, outputFolder, downloadFinished, undefined, false, currentTrack),
         );
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         emitter.emit('error', new Error(currentIndex));
         if (running < maxSimultaneous) {
           downloadNext(urls, lastIndex + 1);

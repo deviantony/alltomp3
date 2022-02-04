@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AllToMP3/alltomp3.git"
+    "url": "git+https://github.com/deviantony/alltomp3.git"
   },
   "keywords": [
     "youtube",
@@ -44,9 +44,9 @@
     "request-promise": "^2.0.1",
     "sharp": "^0.20.8",
     "smartcrop-sharp": "git+https://github.com/AllToMP3/smartcrop-sharp.git#9d65314",
-    "ytdl-core": "latest",
-    "ytpl": "^1.0.1",
-    "ytsr": "^1.0.4"
+    "ytdl-core": "^4.10.1",
+    "ytpl": "^2.2.3",
+    "ytsr": "^3.6.0"
   },
   "devDependencies": {
     "prettier": "^2.0.5"
