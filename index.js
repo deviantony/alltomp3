@@ -19,7 +19,6 @@ const smartcrop = require('smartcrop-sharp');
 const ytsr = require('ytsr');
 const ytpl = require('ytpl');
 const lcs = require('longest-common-substring');
-const { exit } = require('process');
 
 // API keys
 const API_ACOUSTID = 'lm59lNN597';
@@ -1312,7 +1311,7 @@ at3.searchOnYoutube = (query, regionCode, relevanceLanguage, v) => {
   };
 
   // We simply search on YouTube
-  return ytsr(query, { limit: 1 }).then(({ items }) => {
+  return ytsr(query, { limit: 20 }).then(({ items }) => {
     const videos = items.filter((item) => item.type === 'video');
 
     if (videos.length === 0) {
@@ -2153,7 +2152,6 @@ at3.downloadPlaylistWithTitles = (url, outputFolder, callback, maxSimultaneous, 
         );
       })
       .catch((err) => {
-        console.log(err);
         emitter.emit('error', new Error(currentIndex));
         if (running < maxSimultaneous) {
           downloadNext(urls, lastIndex + 1);
