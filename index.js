@@ -1925,6 +1925,10 @@ at3.downloadPlaylistWithURLs = (url, outputFolder, callback, maxSimultaneous, su
       lastIndex = currentIndex;
     }
 
+    if (currentIndex > urls.length) {
+      return;
+    }
+
     const currentUrl = urls[currentIndex];
 
     currentUrl.progress = {};
@@ -2048,6 +2052,10 @@ at3.downloadPlaylistWithTitles = (url, outputFolder, callback, maxSimultaneous, 
     running += 1;
     if (currentIndex > lastIndex) {
       lastIndex = currentIndex;
+    }
+
+    if (currentIndex > urls.length) {
+      return;
     }
 
     let currentTrack = urls[currentIndex];
